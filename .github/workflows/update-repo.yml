@@ -1,0 +1,43 @@
+name: Update Package Repository
+
+on:
+  push:
+    paths:
+      - 'pool/**/*.deb'
+
+jobs:
+  update-repo:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install necessary packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y dpkg-dev
+
+      - name: Generate Packages.gz
+        run: |
+          mkdir -p dists/stable/main/binary-amd64
+          mkdir -p dists/stable/main/binary-i386
+          dpkg-scanpackages pool /dev/null | gzip -9c > dists/stable/main/binary-amd64/Packages.gz
+
+      - name: Create Release File
+        run: |
+          echo "Origin: Rox" > dists/stable/Release
+          echo "Label: HRTOS" >> dists/stable/Release
+          echo "Suite: stable" >> dists/stable/Release
+          echo "Codename: stable" >> dists/stable/Release
+          echo "Architectures: amd64 i386" >> dists/stable/Release
+          echo "Components: main" >> dists/stable/Release
+          echo "Description: repo for hrtos" >> dists/stable/Release
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
+          git add .
+          git commit -m 'Update package repository'
+          git push
