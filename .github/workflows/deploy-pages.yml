@@ -46,4 +46,8 @@ jobs:
           cd gh-pages
           git add .
           git commit -m 'Update GitHub Pages with latest packages'
+<<<<<<< HEAD
           git push origin gh-pages
+=======
+          git push origin gh-pages
+>>>>>>> a273b9acfb57006adefa3c7b27c200c6b5ae538c

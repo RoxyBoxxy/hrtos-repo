@@ -1,0 +1,7 @@
+Origin: Rox
+Label: HRTOS
+Suite: stable
+Codename: stable
+Architectures: amd64 i386
+Components: main
+Description: repo for hrtos
